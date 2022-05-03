@@ -15,12 +15,12 @@
 # num_markers: number of selected marker genes in each cell-type (default = 20)
 
 # mixture_mode: mode of the pseudospot generation 
-# -> 'default' when cell types are similar between single-cell/spatial data (Identical to CellDART)
-# -> 'pseudotype': when there is a mismatch of cell types between single-cell/spatial data and cell types exclusively present in 
+# -> 'default': when cell types are similar between single-cell/spatial data (Identical to CellDART)
+# -> 'pseudotype': when there is a mismatch of cell types between single-cell/spatial data and cell types exclusively present in spatial data is considered when generating pseudospots
 
 # seed_num: seed to be used in random sampling (default = 0)
 
-# mk_ratio_fix: whether to fix the mk_ratio when selecting the 
+# mk_ratio_fix: whether to fix the mk_ratio when selecting the pseudotype markers (default = True)
 # mk_ratio: ratio of number of single-cell markers to virtual pseudotype markers (default = 2)
 # pseudo_num_genes: number of the virtual markers genes for pseudotype (default = 40)
 # -> the number is used only when the mk_ratio is not fixed and number of pseudotype markers should be manually provided 
@@ -53,8 +53,8 @@
 # df: dataframe for predicted cell fraction across all spatial spots
 def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False, 
                             gpu=True, celltype='cluster', num_markers=20,
-                            mixture_mode='default', seed_num=0, 
-                            mk_ratio_fix=False, mk_ratio=2, pseudo_num_genes=40, 
+                            mixture_mode='pseudotype', seed_num=0, 
+                            mk_ratio_fix=True, mk_ratio=2, pseudo_num_genes=40, 
                             pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,
                             nmix=10, npseudo=20000, alpha=0.6, alpha_lr=5, emb_dim=64, 
                             batch_size=512, n_iterations=3000, init_train_epoch=10, 
@@ -76,14 +76,14 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     import pandas as pd
     import numpy as np
 
-    import utils_mod
     import da_cellfraction
+    import utils_mod
     
     ## Change float variables into integer (during conversion from R to python)
-    spfilgene, spfilspot, num_markers, seed_num, pseudo_num_genes, \
+    num_markers, seed_num, pseudo_num_genes, num_top_genes, \
     nmix, npseudo, batch_size, emb_dim, n_iterations, init_train_epoch = \
-        int(spfilgene), int(spfilspot), int(num_markers), int(seed_num), \
-        int(pseudo_num_genes), int(nmix), int(npseudo), int(batch_size), int(emb_dim), \
+        int(num_markers), int(seed_num), \
+        int(pseudo_num_genes), int(num_top_genes), int(nmix), int(npseudo), int(batch_size), int(emb_dim), \
         int(n_iterations), int(init_train_epoch)
     
     ## Create directory if it does not exist

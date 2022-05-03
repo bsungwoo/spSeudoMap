@@ -76,8 +76,8 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     import pandas as pd
     import numpy as np
 
-    import da_cellfraction
-    import utils_mod
+    from spSeudoMap import da_cellfraction
+    from spSeudoMap import utils_mod
     
     ## Change float variables into integer (during conversion from R to python)
     num_markers, seed_num, pseudo_num_genes, num_top_genes, \

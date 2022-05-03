@@ -25,16 +25,16 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
     python -m ipykernel install --user --name spSeudoMap --display-name spSeudoMap  
 
     from spSeudoMap.pred_cellf_spSeudoMap import pred_cellf_spSeudoMap  
-    adata_sp = **def pred_cellf_spSeudoMap**(adata_sp=None, adata_sc=None, count_from_raw=False,   
-                                            gpu=True, celltype='cluster', num_markers=20,  
-                                            mixture_mode='default', seed_num=0,  
-                                            mk_ratio_fix=False, mk_ratio=2, pseudo_num_genes=40,  
-                                            pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,  
-                                            nmix=10, npseudo=20000, alpha=0.6, alpha_lr=5, emb_dim=64, 
-                                            batch_size=512, n_iterations=3000, init_train_epoch=10, 
-                                            outdir='./output', return_format='anndata')  
+    adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,   
+                                      gpu=True, celltype='cluster', num_markers=20,  
+                                      mixture_mode='default', seed_num=0,  
+                                      mk_ratio_fix=False, mk_ratio=2, pseudo_num_genes=40,  
+                                      pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,  
+                                      nmix=10, npseudo=20000, alpha=0.6, alpha_lr=5, emb_dim=64, 
+                                      batch_size=512, n_iterations=3000, init_train_epoch=10, 
+                                      outdir='./output', return_format='anndata')  
 
-  Main parameters  
+### Main parameters  
   **(1) adata_sp:** spatial data (AnnData object) with raw count matrix to be used in predicting cell fraction (default: None)    
   **(2) adata_sc:** single-cell data (AnnData object) with raw count matrix to be used in making pseudospots (default: None)  
   **(3) count_from_raw:** whether to extract count matrix frow .raw of AnnData (default: False)  
@@ -54,7 +54,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
   **(14) nmix:** sampling number of cells in pseudospot (default = 10)  
   **(15) npseudo:** a total number of pseudospots (default = 20,000)  
 
-  Training parameters  
+### Training parameters  
   **(1) alpha:** loss weights of the domain classifier to the source classifier (default = 0.6)  
   **(2) alpha_lr:** learning rate for the domain classifier (alpha_lr*0.001, default = 5)  
   **(3) emb_dim:** output size of dimensions for feature extractor (default = 64)  

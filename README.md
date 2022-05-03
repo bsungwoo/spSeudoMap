@@ -1,7 +1,7 @@
 # spSeudoMap  
 spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data  
 
-## Optimal parameter choices (for brain)  
+## Optimal parameter choices  
   Number of total marker genes = 200 d~ 400 (or number of markers per cluster: 10 ~ 20)  
   m/k ratio = 2 (> 1)  
   pseudo_frac_m = average fraction of negative non-sorted population (literature evidence or cell sorting experiment)  

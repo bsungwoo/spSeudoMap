@@ -61,11 +61,9 @@
 
 ## Output
 # sp_data_sub: spatial data (Seurat object) with predicted cell fraction in metadata (@meta.data)
-
-## 1. Example for using virtual environment
 pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
                                   source.code.dir='.',
-                                  sp_subset=TRUE,spot.cluster.name='seurat_clusters',
+                                  sp_subset=FALSE,spot.cluster.name='seurat_clusters',
                                   spot.cluster.of.interest=NULL,
                                   env.select='virtual',python.install=F,
                                   python_path=NULL,env.name='spSeudoMap',
@@ -160,8 +158,10 @@ pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
   )
   
   ## 2. Subsetting spatial data and save in anndata format
-  cluster_info <- sp_data[[spot.cluster.name]]
-  Seurat::Idents(sp_data) <- spot.cluster.name
+  if (sp_subset){
+    cluster_info <- sp_data[[spot.cluster.name]]
+    Seurat::Idents(sp_data) <- spot.cluster.name
+  }
   
   if (is.null(spot.cluster.of.interest)){
     sp_data_sub <- sp_data

@@ -24,6 +24,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
     pip install git+https://github.com/bsungwoo/spSeudoMap.git  
     python -m ipykernel install --user --name spSeudoMap --display-name spSeudoMap  
 
+``` Plain Text
   from spSeudoMap.pred_cellf_spSeudoMap import pred_cellf_spSeudoMap  
   adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,   
                                   gpu=True, celltype='cluster', num_markers=20,  
@@ -33,6 +34,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
                                   nmix=10, npseudo=20000, alpha=0.6, alpha_lr=5, emb_dim=64, 
                                   batch_size=512, n_iterations=3000, init_train_epoch=10, 
                                   outdir='./output', return_format='anndata')  
+```
 
 ### Main parameters  
   **(1) adata_sp:** spatial data (AnnData object) with raw count matrix to be used in predicting cell fraction (default: None)    

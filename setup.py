@@ -9,5 +9,5 @@ setup(
     author = "Sungwoo Bae, Hongyoon Choi",
     install_requires = ["scanpy==1.6.0","pandas==1.3.5","numpy==1.21.6",
                         "h5py==2.10.0", "jupyter",
-                        "keras==2.3.1", "tensorflow==1.14.0", "tensorflow-gpu==1.14.0"]
+                        "keras==2.3.1", "tensorflow==1.15.0", "tensorflow-gpu==1.15.0"]
 )

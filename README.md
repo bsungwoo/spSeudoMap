@@ -2,7 +2,7 @@
 spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data  
 
 ## Optimal parameter choices  
-  Number of total marker genes = 200 d~ 400 (or number of markers per cluster: 10 ~ 20)  
+  Number of total marker genes = 200 ~ 400 (or number of markers per cluster: 10 ~ 20)  
   m/k ratio = 2 (> 1)  
   pseudo_frac_m = average fraction of negative non-sorted population (literature evidence or cell sorting experiment)  
   pseudo_frac_std = 0.1 (> 0.05)  
@@ -24,19 +24,18 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
     pip install git+https://github.com/bsungwoo/spSeudoMap.git  
     python -m ipykernel install --user --name spSeudoMap --display-name spSeudoMap  
 
+### Function and main parameters  
 ``` Plain Text
-  from spSeudoMap.pred_cellf_spSeudoMap import pred_cellf_spSeudoMap  
-  adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,   
-                                  gpu=True, celltype='cluster', num_markers=20,  
-                                  mixture_mode='default', seed_num=0,  
-                                  mk_ratio_fix=False, mk_ratio=2, pseudo_num_genes=40,  
-                                  pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,  
-                                  nmix=10, npseudo=20000, alpha=0.6, alpha_lr=5, emb_dim=64, 
-                                  batch_size=512, n_iterations=3000, init_train_epoch=10, 
-                                  outdir='./output', return_format='anndata')  
+from spSeudoMap.pred_cellf_spSeudoMap import pred_cellf_spSeudoMap  
+adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,   
+                                 gpu=True, celltype='cluster', num_markers=20,  
+                                 mixture_mode='default', seed_num=0,  
+                                 mk_ratio_fix=False, mk_ratio=2, pseudo_num_genes=40,  
+                                 pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,  
+                                 nmix=10, npseudo=20000, alpha=0.6, alpha_lr=5, emb_dim=64, 
+                                 batch_size=512, n_iterations=3000, init_train_epoch=10, 
+                                 outdir='./output', return_format='anndata')  
 ```
-
-### Main parameters  
   **(1) adata_sp:** spatial data (AnnData object) with raw count matrix to be used in predicting cell fraction (default: None)    
   **(2) adata_sc:** single-cell data (AnnData object) with raw count matrix to be used in making pseudospots (default: None)  
   **(3) count_from_raw:** whether to extract count matrix frow .raw of AnnData (default: False)  

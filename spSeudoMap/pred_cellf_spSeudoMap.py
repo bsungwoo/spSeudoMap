@@ -93,6 +93,8 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     ## Load and preprocess spatial dataset
     if count_from_raw: spatial_all = adata_sp.raw.to_adata()
     else: spatial_all = adata_sp.copy()
+    # Make variable names unique for spatial data
+    spatial_all.var_names_make_unique()
     print('Shape of the provided spatial data is',spatial_all.shape)
      
     # Generate spatial data with raw counts
@@ -105,6 +107,8 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     ## Load and preprocess single-cell dataset
     if count_from_raw: single_all = adata_sc.raw.to_adata()
     else: single_all = adata_sc.copy()
+    # Make variable names unique for spatial data
+    single_all.var_names_make_unique()
 
     # Check if the column for the cell type is included in metadata(.obs)
     if celltype not in list(single_all.obs):

@@ -11,7 +11,7 @@ pred_cellf_spSeudoMap(
   sp_subset = FALSE,
   spot.cluster.name = "seurat_clusters",
   spot.cluster.of.interest = NULL,
-  env.select = "virtual",
+  env.select = "conda",
   python.install = F,
   python_path = NULL,
   env.name = "spSeudoMap",
@@ -37,6 +37,10 @@ pred_cellf_spSeudoMap(
 )
 }
 \arguments{
+\item{sp_data}{spatial data (AnnData object) to be used in predicting cell fraction (default: None): count matrix should be non-normalied raw data.}
+
+\item{sc_data}{single-cell data (AnnData object) to be used in making pseudospots (default: None): count matrix should be non-normalied raw data.}
+
 \item{outdir}{the directory to save output files (models and results) (default = '.')}
 
 \item{sp_subset}{whether to subset spatial data and calculate for specific spot cluster (default = FALSE)}
@@ -45,7 +49,7 @@ pred_cellf_spSeudoMap(
 
 \item{spot.cluster.of.interest}{name of each spot clusters to be used (default: NULL)}
 
-\item{env.select}{select between using reticulate virtual environment or conda environment ("virtual" or "conda")}
+\item{env.select}{select between using reticulate virtual environment or conda environment (default: "conda")}
 
 \item{python.install}{whether to automatically install python version 3.7.12}
 
@@ -98,12 +102,6 @@ pred_cellf_spSeudoMap(
 
 \item{init_train_epoch}{iteration number for the pre-training process (default = 10)}
 
-\item{adata_sp}{spatial data (AnnData object) to be used in predicting cell fraction (default: None): count matrix should be non-normalied raw data.}
-
-\item{adata_sc}{single-cell data (AnnData object) to be used in making pseudospots (default: None): count matrix should be non-normalied raw data.}
-
-\item{source.code.dir}{directory of python source code (default = 'pred_cellf_spSeudoMap.py')}
-
 \item{mk_ratio_fix:}{whether to fix the mk_ratio when selecting the}
 
 \item{mk_ratio:}{ratio of number of single-cell markers to virtual pseudotype markers (default = 2)}
@@ -120,7 +118,9 @@ spatial data (Seurat object) with predicted cell fraction in metadata (meta.data
 cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
 }
 \examples{
-sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data_sim,
+Using conda environment (environment will be automatically installed in Linux distributions)
+If using Windows, then install conda environment first and then run the function below with python.install = F
+sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data,
                                        outdir=output_folder_name,
                                        sp_subset=F,spot.cluster.name='seurat_clusters',
                                        spot.cluster.of.interest=NULL,
@@ -134,4 +134,19 @@ sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data_sim,
                                        nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
                                        emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
 
+Using virtual environment (environment will be automatically installed in Linux distributions)
+Not recommended for Windows
+sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data,
+                                       outdir=output_folder_name,
+                                       sp_subset=F,spot.cluster.name='seurat_clusters',
+                                       spot.cluster.of.interest=NULL,
+                                       env.select='virtual',python.install=T,
+                                       python_path=NULL,env.name='spSeudoMap',
+                                       gpu=TRUE,metadata_celltype='annotation_1',
+                                       num_markers=40,mixture_mode='pseudotype',
+                                       seed_num=0,
+                                       mk_ratio_fix=T, mk_ratio=4,
+                                       pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
+                                       nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
+                                       emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
 }

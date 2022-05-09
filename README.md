@@ -71,6 +71,9 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
 
 ## R wrap function for spSeudoMap (spSeudoMap_R.R)
     devtools::install_github("bsungwoo/spSeudoMap")
+  ### Installation of virtual or conda environment
+  Linux distributions: The environment will be automatically installed by running the function   
+  Windows: Install conda environment first and then run the function with env.select = 'conda'   
 
   ### Additional parameters  
   **(1) outdir:** the directory to save output files (models and results) (default = '.')  
@@ -78,10 +81,11 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   **(3) sp_subset:** whether to subset spatial data and calculate for specific spot cluster (default = FALSE)  
   **(4) spot.cluster.name:** group name of the cluster used for subsetting spatial data (default = 'seurat_clusters')  
   **(5) spot.cluster.of.interest:** name of each spot clusters to be used (default = NULL)  
-  **(6) env.select:** select between using reticulate virtual environment or conda environment ("virtual" or "conda") (default = 'virtual') 
+  **(6) env.select:** select between using reticulate virtual environment or conda environment ("virtual" or "conda") (default = 'virtual')  
   -> either of the selection will search the already installed environment  
   -> if environment is not found, then it will automatically install the new environment  
   **(7) python.install:** whether to automatically install python version 3.7.12 (default = F)  
+  -> For Windows, set python.install = F
   **(8) python_path:** path for the python 3.7.12 (default = NULL)  
   **(9) env.name:** name of the virtual or conda environment to use for CellDART analysis (default = 'spSeudoMap')  
   **(10) metadata_celltype:** column name for single-cell annotation data in metadata (default = 'celltype')  

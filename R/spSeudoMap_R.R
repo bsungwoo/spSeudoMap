@@ -1,18 +1,17 @@
 #' R wrap function to implement spSeudoMap
 #' @description cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
 #'
-#' @param adata_sp spatial data (AnnData object) to be used in predicting cell fraction (default: None): count matrix should be non-normalied raw data.
-#' @param adata_sc single-cell data (AnnData object) to be used in making pseudospots (default: None): count matrix should be non-normalied raw data.
+#' @param sp_data spatial data (AnnData object) to be used in predicting cell fraction (default: None): count matrix should be non-normalied raw data.
+#' @param sc_data single-cell data (AnnData object) to be used in making pseudospots (default: None): count matrix should be non-normalied raw data.
 #'
 #' @param outdir the directory to save output files (models and results) (default = '.')
-#' @param source.code.dir directory of python source code (default = 'pred_cellf_spSeudoMap.py')
 #'
 #' @param sp_subset whether to subset spatial data and calculate for specific spot cluster (default = FALSE)
 #' @param spot.cluster.name group name of the cluster used for subsetting spatial data (default: 'seurat_clusters')
 #' @param spot.cluster.of.interest name of each spot clusters to be used (default: NULL)
 #' @param metadata_celltype column name for single-cell annotation data in metadata (default: 'celltype')
 #'
-#' @param env.select select between using reticulate virtual environment or conda environment ("virtual" or "conda")
+#' @param env.select select between using reticulate virtual environment or conda environment (default: "conda")
 #' @param python.install whether to automatically install python version 3.7.12
 #'
 #' @param python_path path for the python 3.7. (default: NULL)
@@ -64,7 +63,9 @@
 #'
 #' @return spatial data (Seurat object) with predicted cell fraction in metadata (meta.data)
 #' @examples
-#' sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data_sim,
+#' Using conda environment (environment will be automatically installed in Linux distributions)
+#' If using Windows, then install conda environment first and then run the function below with python.install = F
+#' sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data,
 #'                                        outdir=output_folder_name,
 #'                                        sp_subset=F,spot.cluster.name='seurat_clusters',
 #'                                        spot.cluster.of.interest=NULL,
@@ -77,12 +78,27 @@
 #'                                        pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
 #'                                        nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
 #'                                        emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
-#'
+#' 
+#' Using virtual environment (environment will be automatically installed in Linux distributions)
+#' Not recommended for Windows
+#' sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data,
+#'                                        outdir=output_folder_name,
+#'                                        sp_subset=F,spot.cluster.name='seurat_clusters',
+#'                                        spot.cluster.of.interest=NULL,
+#'                                        env.select='virtual',python.install=T,
+#'                                        python_path=NULL,env.name='spSeudoMap',
+#'                                        gpu=TRUE,metadata_celltype='annotation_1',
+#'                                        num_markers=40,mixture_mode='pseudotype',
+#'                                        seed_num=0,
+#'                                        mk_ratio_fix=T, mk_ratio=4,
+#'                                        pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
+#'                                        nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
+#'                                        emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
 #' @export
 pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
                                   sp_subset=FALSE,spot.cluster.name='seurat_clusters',
                                   spot.cluster.of.interest=NULL,
-                                  env.select='virtual',python.install=F,
+                                  env.select='conda',python.install=F,
                                   python_path=NULL,env.name='spSeudoMap',
                                   gpu=TRUE,metadata_celltype='celltype',
                                   num_markers=10,mixture_mode='pseudotype',

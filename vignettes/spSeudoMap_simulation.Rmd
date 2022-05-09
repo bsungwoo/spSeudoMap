@@ -2,7 +2,7 @@
 title: "Example for spSeudoMap in R (Simulation data)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Simulation}
+  %\VignetteIndexEntry{spSeudoMap_simulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,54 +21,54 @@ knitr::opts_knit$set(
 
 ## Install required packages
 ```{r setup}
-## Install devtools
-if (!requireNamespace("devtools", quietly = TRUE))
-  install.packages('devtools')
-
-## Install spSeudoMap package
-if (!requireNamespace("spSeudoMap", quietly = TRUE))
-  devtools::install_github("bsungwoo/spSeudoMap")
-
-## Install sceasy
-# https://github.com/cellgeni/sceasy
-# 1. Install BiocManager
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-# 2. Install LoomExperiment
-if (!requireNamespace("LoomExperiment", quietly = TRUE))
-  BiocManager::install(c("LoomExperiment", "SingleCellExperiment"))
-
-# 3. Install sceasy
-if (!requireNamespace("sceasy", quietly = TRUE))
-  devtools::install_github("cellgeni/sceasy")
+# ## Install devtools
+# if (!requireNamespace("devtools", quietly = TRUE))
+#   install.packages('devtools')
+# 
+# ## Install spSeudoMap package
+# if (!requireNamespace("spSeudoMap", quietly = TRUE))
+#   devtools::install_github("bsungwoo/spSeudoMap")
+# 
+# ## Install sceasy
+# # https://github.com/cellgeni/sceasy
+# # 1. Install BiocManager
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
+# 
+# # 2. Install LoomExperiment
+# if (!requireNamespace("LoomExperiment", quietly = TRUE))
+#   BiocManager::install(c("LoomExperiment", "SingleCellExperiment"))
+# 
+# # 3. Install sceasy
+# if (!requireNamespace("sceasy", quietly = TRUE))
+#   devtools::install_github("cellgeni/sceasy")
 
 ```
 
 ## Load required packages
 ```{r}
-library(spSeudoMap)
-library(SeuratObject)
+# library(spSeudoMap)
+# library(SeuratObject)
 ```
 
 
 ## Make output and data directories
 ```{r}
-# Set the location of the R project file as a default directory
-filepath <- rprojroot::find_rstudio_root_file()
-# Set working directoy
-setwd(filepath)
-
-# Create output directory
-output_folder_name <- 'output'
-if (!file.exists(output_folder_name)){
-  dir.create(output_folder_name)
-}
-
-# Create data directory
-if (!file.exists('data')){
-  dir.create('data')
-}
+# # Set the location of the R project file as a default directory
+# filepath <- rprojroot::find_rstudio_root_file()
+# # Set working directoy
+# setwd(filepath)
+# 
+# # Create output directory
+# output_folder_name <- 'output'
+# if (!file.exists(output_folder_name)){
+#   dir.create(output_folder_name)
+# }
+# 
+# # Create data directory
+# if (!file.exists('data')){
+#   dir.create('data')
+# }
 ```
 
 
@@ -84,186 +84,125 @@ if (!file.exists('data')){
 #### Kleshchevnikov, V., Shmatko, A., Dann, E. et al. Cell2location maps fine-grained cell types in spatial transcriptomics. Nat Biotechnol (2022).
 #### https://cell2location.readthedocs.io/en/latest/notebooks/cell2location_short_demo.html¶
 ```{r}
-options(timeout=1000)
-download.file(url = "https://cell2location.cog.sanger.ac.uk/tutorial/mouse_brain_snrna/regression_model/RegressionGeneBackgroundCoverageTorch_65covariates_40532cells_12819genes/sc.h5ad",
-              destfile = './data/adata_single.h5ad')
+# options(timeout=1000)
+# download.file(url = "https://cell2location.cog.sanger.ac.uk/tutorial/mouse_brain_snrna/regression_model/RegressionGeneBackgroundCoverageTorch_65covariates_40532cells_12819genes/sc.h5ad",
+#               destfile = './data/adata_single.h5ad')
 ```
 
 
 ### Load single-nucleus data and generate simulation dataset
 #### Load conda environment and load .h5ad
 ```{r}
-## Load conda environment and convert to Seurat object
-reticulate::use_condaenv("spSeudoMap", required=TRUE)
-sc <- reticulate::import('scanpy', convert = FALSE)
-sp <- reticulate::import('scipy.sparse', convert = FALSE)
-
-# Load single-cell data 
-sc_data <- sc$read(file.path(filepath, './data/adata_single.h5ad'))
+# ## Load conda environment and convert to Seurat object
+# reticulate::use_condaenv("spSeudoMap", required=TRUE)
+# sc <- reticulate::import('scanpy', convert = FALSE)
+# sp <- reticulate::import('scipy.sparse', convert = FALSE)
+# 
+# # Load single-cell data 
+# sc_data <- sc$read(file.path(filepath, './data/adata_single.h5ad'))
 
 ```
 
 #### Extract raw data, convert to the matrix and extract metadata
 ```{r}
-# Extract raw data
-sc_data = sc_data$raw$to_adata()
-
-# Convert scipy matrix to sparse matrix in R
-X <- Matrix::t(reticulate::py_to_r(sp$csc_matrix(sc_data$X)))
-# Assign row names and column names
-rownames(X) <- reticulate::py_to_r(sc_data$var['SYMBOL']$tolist())
-colnames(X) <- reticulate::py_to_r(sc_data$obs$index$tolist())
-
-# Convert metadata(.obs) in pandas dataframe into R dataframe
-obs <- reticulate::py_to_r(sc_data$obs)
+# # Extract raw data
+# sc_data = sc_data$raw$to_adata()
+# 
+# # Convert scipy matrix to sparse matrix in R
+# X <- Matrix::t(reticulate::py_to_r(sp$csc_matrix(sc_data$X)))
+# # Assign row names and column names
+# rownames(X) <- reticulate::py_to_r(sc_data$var['SYMBOL']$tolist())
+# colnames(X) <- reticulate::py_to_r(sc_data$obs$index$tolist())
+# 
+# # Convert metadata(.obs) in pandas dataframe into R dataframe
+# obs <- reticulate::py_to_r(sc_data$obs)
 ```
 
 #### Create Seurat Object and save
 ```{r}
-# Convert to Seurat object and add metadata
-sc_data_r <- Seurat::CreateSeuratObject(X)
-sc_data_r <- Seurat::AddMetaData(sc_data_r, obs)
+# # Convert to Seurat object and add metadata
+# sc_data_r <- Seurat::CreateSeuratObject(X)
+# sc_data_r <- Seurat::AddMetaData(sc_data_r, obs)
 ```
 
 #### (Load the Seurat object) and create simulation subpopulation data (with Ext neurons)
 ```{r}
-# Subset excitatory neurons
-ext_neuron_types <- grep(pattern='^Ext_', 
-                         levels(factor(sc_data_r[['annotation_1']][,1])), value=T)
-ext_neuron_types
-
-# Set the identity to the cell types
-Seurat::Idents(sc_data_r) <- sc_data_r[['annotation_1']]
-
-# Subset the single-cell data to contain only the excitatory neurons
-sc_data_sim <- subset(sc_data_r, idents=ext_neuron_types)
-
-# Save the subsetted simulated single-cell data (Ext)
-saveRDS(sc_data_sim, file.path(filepath,'./data/sc_data_sim.rds'))
+# # Subset excitatory neurons
+# ext_neuron_types <- grep(pattern='^Ext_', 
+#                          levels(factor(sc_data_r[['annotation_1']][,1])), value=T)
+# ext_neuron_types
+# 
+# # Set the identity to the cell types
+# Seurat::Idents(sc_data_r) <- sc_data_r[['annotation_1']]
+# 
+# # Subset the single-cell data to contain only the excitatory neurons
+# sc_data_sim <- subset(sc_data_r, idents=ext_neuron_types)
+# 
+# # Save the subsetted simulated single-cell data (Ext)
+# saveRDS(sc_data_sim, file.path(filepath,'./data/sc_data_sim.rds'))
 ```
 
 
 ### Load spatial dataset (RDS file with Seurat object): 10X genomics data repository
 #### V1_Adult_Mouse_Brain_Coronal_Section_1
 ```{r}
-# Import dataset from scanpy
-sc$datasets$visium_sge(
-  sample_id="V1_Adult_Mouse_Brain_Coronal_Section_1"
-
-)
-
-sp_data <- Seurat::Load10X_Spatial(file.path(filepath,'./data/V1_Adult_Mouse_Brain_Coronal_Section_1'))
+# # Import dataset from scanpy
+# sc$datasets$visium_sge(
+#   sample_id="V1_Adult_Mouse_Brain_Coronal_Section_1"
+# 
+# )
+# 
+# sp_data <- Seurat::Load10X_Spatial(file.path(filepath,'./data/V1_Adult_Mouse_Brain_Coronal_Section_1'))
 ```
 
 ### Check the size of spatial data
 ```{r}
-dim(sp_data)
+# dim(sp_data)
 ```
 
 ### Set the number of pseudospots: 5 times the number of spatial spots
 ```{r}
-npseudo <- 5*dim(sp_data)[2]
-npseudo
+# npseudo <- 5*dim(sp_data)[2]
+# npseudo
 ```
 
 ### Set the pseudotype fraction from the simulation dataset (fraction of non-excitatory neuron population)
 ```{r}
-# Calculate pseudotype fraction from the simulation dataset
-pseudo_frac_m <- 1 - ((dim(sc_data_sim)[2])/(dim(sc_data_r)[2]))
-pseudo_frac_m
+# # Calculate pseudotype fraction from the simulation dataset
+# pseudo_frac_m <- 1 - ((dim(sc_data_sim)[2])/(dim(sc_data_r)[2]))
+# pseudo_frac_m
 ```
 
 ## Perform spSeuoMap analysis
-### Cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
-
-#### Seurat object to AnnData conversion algorithm: reference to sceasy
-#### https://github.com/cellgeni/sceasy
-
-#### Input
-#### adata_sp: spatial data (AnnData object) to be used in predicting cell fraction (default: None)
-#### -> count matrix should be non-normalied raw data
-#### adata_sc: single-cell data (AnnData object) to be used in making pseudospots (default: None)
-#### -> count matrix should be non-normalied raw data
-
-#### outdir: the directory to save output files (models and results) (default = '.')
-#### source.code.dir: directory of python source code (default = 'pred_cellf_spSeudoMap.py')
-
-#### sp_subset: whether to subset spatial data and calculate for specific spot cluster (default = FALSE)
-#### spot.cluster.name: group name of the cluster used for subsetting spatial data (default: 'seurat_clusters')
-#### spot.cluster.of.interest: name of each spot clusters to be used (default: NULL)
-#### metadata_celltype: column name for single-cell annotation data in metadata (default: 'celltype')
-
-#### env.select: select between using reticulate virtual environment or conda environment ("virtual" or "conda")
-#### python.install: whether to automatically install python version 3.7.12
-
-#### python_path: path for the python 3.7. (default: NULL)
-#### If NULL, python version 3.7.12 will be installed (valid for Linux) 
-#### If "current", python interpreter associated with current virtual env (ex: r-reticulate) will be used. (version should be 3.7)
-#### env.name: name of the virtual or conda environment to use for CellDART analysis (default: 'spSeudoMap')
-
-#### gpu: check whether to use gpu (True) or not (False) (default = True)
-#### metadata_celltype: column name for single-cell annotation data in metadata (default: 'celltype')
-#### num_markers: number of selected marker genes in each cell-type (default = 20)
-
-#### mixture_mode: mode of the pseudospot generation 
-#### -> 'default': when cell types are similar between single-cell/spatial data (Identical to CellDART)
-#### -> 'pseudotype': when there is a mismatch of cell types between single-cell/spatial data and cell types exclusively present in spatial data is considered when generating pseudospots
-
-#### seed_num: seed to be used in random sampling (default = 0)
-
-#### mk_ratio_fix: whether to fix the mk_ratio when selecting the 
-#### mk_ratio: ratio of number of single-cell markers to virtual pseudotype markers (default = 2)
-#### pseudo_num_genes: number of the virtual markers genes for pseudotype (default = 40)
-### -> the number is used only when the mk_ratio is not fixed and number of pseudotype markers should be manually provided 
-
-#### pseudo_frac_m: average of presumed fraction of the pseudotype (cell types exclusively present in spatial data) across all spatial spots (default = 0.5)
-#### -> determined by cell sorting study or by literature based evidence that enables speculation of average fraction in the tissue
-#### pseudo_frac_std: standard deviation of the distribution of presumed pseudotype fraction across all spatial spots (default = 0.1)
-#### num_top_genes: number of top genes having highest log fold change between spatial and single-cell normalized pseudobulk counts (spatial/single-cell)
-#### -> the top genes are used for generating module score to predict pseudotype fraction in spatial spots
-
-#### nmix: the number of cells sampled from single-cell data when making a pseudospot (default = 10)
-#### npseudo: a total number of pseudospots (default = 20000)
-
-#### alpha: loss weights of domain classifier to the source classifier (default = 0.6)
-#### alpha_lr: learning rate for the domain classifier (alpha_lr*0.001, default = 5)
-#### emb_dim: output size of dimensions for feature extractor (default = 64)
-
-#### batch_size: minibatch size for pseudospots and spatial data during the training (default = 512)
-#### n_iterations: iteration number for the adversarial learning (default = 3000)
-#### init_train_epoch: iteration number for the pre-training process (default = 10)
-
-#### Output
-#### sp_data_sub: spatial data (Seurat object) with predicted cell fraction in metadata (@meta.data)
-
-
-### 1. Example for using conda environment (recommended)
-#### For Linux distributions, conda environment will be automatically installed without previous installation
-#### For Windows OS, install conda environment first and then call it using env.name='spSeudoMap'
-#### For Windows OS, 'python.install' should be F
+#### Explanation for the function
 ```{r}
-# Using already installed conda environment
-# Conda environment will be automatically installed if 'spSeudoMap' is not already installed
-sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data_sim,
-                                       outdir=output_folder_name,
-                                       sp_subset=F,spot.cluster.name='seurat_clusters',
-                                       spot.cluster.of.interest=NULL,
-                                       env.select='conda',python.install=T,
-                                       python_path=NULL,env.name='spSeudoMap',
-                                       gpu=TRUE,metadata_celltype='annotation_1',
-                                       num_markers=40,mixture_mode='pseudotype',
-                                       seed_num=0,
-                                       mk_ratio_fix=T, mk_ratio=4,
-                                       pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1, 
-                                       nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
-                                       emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
+# help("pred_cellf_spSeudoMap")
+```
+
+### Run spSeudoMap
+```{r}
+# # Using already installed conda environment
+# # Conda environment will be automatically installed if 'spSeudoMap' is not already installed
+# sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data_sim,
+#                                        outdir=output_folder_name,
+#                                        sp_subset=F,spot.cluster.name='seurat_clusters',
+#                                        spot.cluster.of.interest=NULL,
+#                                        env.select='conda',python.install=T,
+#                                        python_path=NULL,env.name='spSeudoMap',
+#                                        gpu=TRUE,metadata_celltype='annotation_1',
+#                                        num_markers=40,mixture_mode='pseudotype',
+#                                        seed_num=0,
+#                                        mk_ratio_fix=T, mk_ratio=4,
+#                                        pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1, 
+#                                        nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
+#                                        emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
 
 ```
 
 
 ### Save seurat object with cell fraction
 ```{r}
-saveRDS(sp_data_cellf, file.path(filepath, output_folder_name, 'sp_data_cellf.rds'))
+# saveRDS(sp_data_cellf, file.path(filepath, output_folder_name, 'sp_data_cellf.rds'))
 ```
 
 
@@ -271,24 +210,24 @@ saveRDS(sp_data_cellf, file.path(filepath, output_folder_name, 'sp_data_cellf.rd
 ### Visualization of spatial cell fraction
 #### Remove '_cellf' from the column names cell fraction metadata
 ```{r}
-cellf.data <- sp_data_cellf@meta.data
-cellf.data.colname <- sapply(colnames(cellf.data), function(x){
-  if (grepl('_cellf',x)){return(strsplit(x, split='_cellf')[[1]][1])}
-  else {return(x)}
-})
-sp_data_cellf.mod <- sp_data_cellf
-colnames(sp_data_cellf.mod@meta.data) <- cellf.data.colname
+# cellf.data <- sp_data_cellf@meta.data
+# cellf.data.colname <- sapply(colnames(cellf.data), function(x){
+#   if (grepl('_cellf',x)){return(strsplit(x, split='_cellf')[[1]][1])}
+#   else {return(x)}
+# })
+# sp_data_cellf.mod <- sp_data_cellf
+# colnames(sp_data_cellf.mod@meta.data) <- cellf.data.colname
 ```
 
 
 #### Visualize the layer-specific excitatory neuons
 ```{r}
-cell_types <- c('Ext_L25','Ext_L23','Ext_L56','Ext_L5_1',
-                'Ext_L6B','Ext_Hpc_CA1','Ext_Hpc_CA3',
-                'Ext_Hpc_DG1','Ext_Thal_1','Ext_Pir','Ext_Amy_1','Others')
-
-p <- Seurat::SpatialFeaturePlot(sp_data_cellf.mod, features = cell_types, 
-                                ncol = 4, alpha=0.6, combine = FALSE)
-patchwork::wrap_plots(p, ncol = 4)
+# cell_types <- c('Ext_L25','Ext_L23','Ext_L56','Ext_L5_1',
+#                 'Ext_L6B','Ext_Hpc_CA1','Ext_Hpc_CA3',
+#                 'Ext_Hpc_DG1','Ext_Thal_1','Ext_Pir','Ext_Amy_1','Others')
+# 
+# p <- Seurat::SpatialFeaturePlot(sp_data_cellf.mod, features = cell_types, 
+#                                 ncol = 4, alpha=0.6, combine = FALSE)
+# patchwork::wrap_plots(p, ncol = 4)
 
 ```

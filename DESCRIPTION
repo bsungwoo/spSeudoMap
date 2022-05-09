@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-3484-3749")),
     person(given = "Hongyoon",
            family = "Choi",
-           role = c("aut", "cre"),
+           role = c("aut"),
            comment = c(ORCID = "0000-0002-8895-2449")))
 Description: Cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
 License: `use_mit_license()`

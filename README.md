@@ -16,7 +16,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
 
 ## Code Example  
   Python example: spSeudoMap_example.ipynb  
-  R example: browseVignettes('spSeudoMap')  
+  R example: Refer to /vignettes/spSeudoMap_simulation.Rmd and  /vignettes/spSeudoMap_sorted.Rmd  
 
 ## Data Example  
   spatial data: 'V1_Adult_Mouse_Brain_Coronal_Section_1' from 10X Genomics Repository  
@@ -70,7 +70,7 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   **(8) return_format:** whether to return spatial AnnData file with predicted cell fraction in .obs (default: False)  
 
 ## R wrap function for spSeudoMap (spSeudoMap_R.R)
-    devtools::install_github("bsungwoo/spSeudoMap")
+    devtools::install_github("bsungwoo/spSeudoMap", force = T)  
   ### Installation of virtual or conda environment
   Linux distributions: The environment will be automatically installed by running the function   
   Windows: Install conda environment first and then run the function with env.select = 'conda'   
@@ -85,7 +85,7 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   -> either of the selection will search the already installed environment  
   -> if environment is not found, then it will automatically install the new environment  
   **(7) python.install:** whether to automatically install python version 3.7.12 (default = F)  
-  -> For Windows, set python.install = F
+  -> For Windows, set python.install = F  
   **(8) python_path:** path for the python 3.7.12 (default = NULL)  
   **(9) env.name:** name of the virtual or conda environment to use for CellDART analysis (default = 'spSeudoMap')  
   **(10) metadata_celltype:** column name for single-cell annotation data in metadata (default = 'celltype')  

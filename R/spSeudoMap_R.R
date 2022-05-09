@@ -1,5 +1,5 @@
 #' R wrap function to implement spSeudoMap
-#' @description cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
+#' @description Cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data. Of note, if mixture_mode = 'default', then algorithm is identical to 'CellDART'
 #'
 #' @param sp_data spatial data (AnnData object) to be used in predicting cell fraction (default: None): count matrix should be non-normalied raw data.
 #' @param sc_data single-cell data (AnnData object) to be used in making pseudospots (default: None): count matrix should be non-normalied raw data.
@@ -26,8 +26,9 @@
 #' @param metadata_celltype column name for single-cell annotation data in metadata (default: 'celltype')
 #' @param num_markers number of selected marker genes in each cell-type (default = 20)
 #'
-#' @param mixture_mode mode of the pseudospot generation: 'default'-when cell types are similar between single-cell/spatial data (Identical to CellDART)
+#' @param mixture_mode mode of the pseudospot generation (default = 'pseudotype')
 #' \itemize{
+#'   \item 'default': when cell types are similar between single-cell/spatial data (Identical to CellDART)
 #'   \item 'pseudotype': when there is a mismatch of cell types between single-cell/spatial data and cell types exclusively present in spatial data is considered when generating pseudospots
 #' }
 #'

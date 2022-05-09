@@ -2,8 +2,7 @@
 % Please edit documentation in R/spSeudoMap_R.R
 \name{pred_cellf_spSeudoMap}
 \alias{pred_cellf_spSeudoMap}
-\title{Function to implement spSeudoMap in python
-cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data}
+\title{R wrap function to implement spSeudoMap}
 \usage{
 pred_cellf_spSeudoMap(
   sp_data,
@@ -118,7 +117,6 @@ pred_cellf_spSeudoMap(
 spatial data (Seurat object) with predicted cell fraction in metadata (meta.data)
 }
 \description{
-Function to implement spSeudoMap in python
 cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
 }
 \examples{

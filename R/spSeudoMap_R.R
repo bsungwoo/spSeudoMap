@@ -46,10 +46,7 @@
 #'   \item determined by cell sorting study or by literature based evidence that enables speculation of average fraction in the tissue
 #' }
 #' @param pseudo_frac_std standard deviation of the distribution of presumed pseudotype fraction across all spatial spots (default = 0.1)
-#' @param num_top_genes number of top genes having highest log fold change between spatial and single-cell normalized pseudobulk counts (spatial/single-cell)
-#' \itemize{
-#'   \item the top genes are used for generating module score to predict pseudotype fraction in spatial spots
-#' }
+#' @param num_top_genes number of top genes having highest log fold change between spatial and single-cell normalized pseudobulk counts (spatial/single-cell): the top genes are used for generating module score to predict pseudotype fraction in spatial spots
 #'
 #' @param nmix the number of cells sampled from single-cell data when making a pseudospot (default = 10)
 #' @param npseudo a total number of pseudospots (default = 20000)

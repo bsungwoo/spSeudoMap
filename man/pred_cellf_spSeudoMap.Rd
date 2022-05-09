@@ -67,8 +67,9 @@ pred_cellf_spSeudoMap(
 
 \item{num_markers}{number of selected marker genes in each cell-type (default = 20)}
 
-\item{mixture_mode}{mode of the pseudospot generation: 'default'-when cell types are similar between single-cell/spatial data (Identical to CellDART)
+\item{mixture_mode}{mode of the pseudospot generation (default = 'pseudotype')
 \itemize{
+\item 'default': when cell types are similar between single-cell/spatial data (Identical to CellDART)
 \item 'pseudotype': when there is a mismatch of cell types between single-cell/spatial data and cell types exclusively present in spatial data is considered when generating pseudospots
 }}
 
@@ -81,10 +82,7 @@ pred_cellf_spSeudoMap(
 
 \item{pseudo_frac_std}{standard deviation of the distribution of presumed pseudotype fraction across all spatial spots (default = 0.1)}
 
-\item{num_top_genes}{number of top genes having highest log fold change between spatial and single-cell normalized pseudobulk counts (spatial/single-cell)
-\itemize{
-\item the top genes are used for generating module score to predict pseudotype fraction in spatial spots
-}}
+\item{num_top_genes}{number of top genes having highest log fold change between spatial and single-cell normalized pseudobulk counts (spatial/single-cell): the top genes are used for generating module score to predict pseudotype fraction in spatial spots}
 
 \item{nmix}{the number of cells sampled from single-cell data when making a pseudospot (default = 10)}
 
@@ -115,7 +113,7 @@ pred_cellf_spSeudoMap(
 spatial data (Seurat object) with predicted cell fraction in metadata (meta.data)
 }
 \description{
-cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
+Cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data. Of note, if mixture_mode = 'default', then algorithm is identical to 'CellDART'
 }
 \examples{
 Using conda environment (environment will be automatically installed in Linux distributions)

@@ -81,7 +81,7 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   **(3) sp_subset:** whether to subset spatial data and calculate for specific spot cluster (default = FALSE)  
   **(4) spot.cluster.name:** group name of the cluster used for subsetting spatial data (default = 'seurat_clusters')  
   **(5) spot.cluster.of.interest:** name of each spot clusters to be used (default = NULL)  
-  **(6) env.select:** select between using reticulate virtual environment or conda environment ("virtual" or "conda") (default = 'virtual')  
+  **(6) env.select:** select between using reticulate virtual environment or conda environment (default = 'conda')  
   -> either of the selection will search the already installed environment  
   -> if environment is not found, then it will automatically install the new environment  
   **(7) python.install:** whether to automatically install python version 3.7.12 (default = F)  

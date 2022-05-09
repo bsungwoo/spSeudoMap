@@ -1,8 +1,9 @@
 # spSeudoMap  
 spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data  
+![Alt text](/home/nmadmin/DATA1/Spatial/Fig.1.jpg?raw=true "")  
 
 ## Optimal parameter choices  
-  Number of marker genes per cluster: 40 (>20)
+  Number of marker genes per cluster: 40 (>20)  
   m/k ratio = 2 (> 1)  
   pseudo_frac_m = average fraction of negative non-sorted population (literature evidence or cell sorting experiment)  
   pseudo_frac_std = 0.1 (> 0.05)  
@@ -68,7 +69,6 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
 ## R wrap function for spSeudoMap (spSeudoMap_R.R)
     devtools::install_github("bsungwoo/spSeudoMap")
 
-  ### Parameters: similar to the python function  
   ### Additional parameters  
   **(1) outdir:** the directory to save output files (models and results) (default = '.')  
   **(2) source.code.dir:** directory of python source code (default = '.')  

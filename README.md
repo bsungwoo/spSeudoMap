@@ -1,6 +1,6 @@
 # spSeudoMap  
 spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data  
-![My Image](/home/nmadmin/DATA1/Spatial/CellDART/spSeudoMap/Fig.jpg)  
+![Fig  1](https://user-images.githubusercontent.com/61150422/167383248-417cf084-4ecc-4659-979c-54a64c45ec4f.jpg)
 
 ## Optimal parameter choices  
   Number of marker genes per cluster: 40 (>20)  

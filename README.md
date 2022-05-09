@@ -33,7 +33,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
 from spSeudoMap.pred_cellf_spSeudoMap import pred_cellf_spSeudoMap  
 adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,   
                                  gpu=True, celltype='cluster', num_markers=20,  
-                                 mixture_mode='default', seed_num=0,  
+                                 mixture_mode='pseudotype', seed_num=0,  
                                  mk_ratio_fix=False, mk_ratio=2, pseudo_num_genes=40,  
                                  pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,  
                                  nmix=10, npseudo=20000, alpha=0.6, alpha_lr=5, emb_dim=64, 

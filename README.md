@@ -21,7 +21,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
 ## Data Example  
   spatial data: 'V1_Adult_Mouse_Brain_Coronal_Section_1' from 10X Genomics Repository  
 
-## Python function for spSeudoMap (pred_cellf_spSeudoMap.py)  
+## Python function for spSeudoMap (pred_cellf_spSeudoMap)  
 ### Install conda environment and add kernel (jupyter)  
     conda create -n spSeudoMap python=3.7.12 -c conda-forge  
     conda activate spSeudoMap  
@@ -69,7 +69,7 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   **(7) outdir:** the directory to save output files (models and results)  
   **(8) return_format:** whether to return spatial AnnData file with predicted cell fraction in .obs (default: False)  
 
-## R wrap function for spSeudoMap (spSeudoMap_R.R)
+## R wrap function for spSeudoMap (spSeudoMap::pred_cellf_spSeudoMap)
     devtools::install_github("bsungwoo/spSeudoMap", force = T)  
   ### Installation of virtual or conda environment
   Linux distributions: The environment will be automatically installed by running the function   

@@ -7,19 +7,9 @@ if (!requireNamespace("Seurat", quietly = TRUE))
 if (!requireNamespace("dplyr", quietly = TRUE))
   install.packages("dplyr")
 
-## Install sceasy
-# https://github.com/cellgeni/sceasy
-# 1. Install BiocManager
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-# 2. Install LoomExperiment
-if (!requireNamespace("LoomExperiment", quietly = TRUE))
-  BiocManager::install(c("LoomExperiment", "SingleCellExperiment"))
-
-# 3. Install sceasy
-if (!requireNamespace("sceasy", quietly = TRUE))
-  devtools::install_github("cellgeni/sceasy")
+# Install spSeudoMap
+if (!requireNamespace("dplyr", quietly = TRUE))
+  devtools::install_github("spSeudoMap")
 
 
 

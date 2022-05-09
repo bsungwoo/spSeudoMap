@@ -1,5 +1,5 @@
-#' Function to implement spSeudoMap in python
-#' cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
+#' R wrap function to implement spSeudoMap
+#' @description cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data
 #'
 #' @param adata_sp spatial data (AnnData object) to be used in predicting cell fraction (default: None): count matrix should be non-normalied raw data.
 #' @param adata_sc single-cell data (AnnData object) to be used in making pseudospots (default: None): count matrix should be non-normalied raw data.
@@ -120,7 +120,7 @@ pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
 
       # Create virtual env and install dependencies
       # reticulate::virtualenv_install(env.name, packages = python_depend, ignore_installed=T)
-      reticulate::virtualenv_install(env.name, packages = '', ignore_installed=T,
+      reticulate::virtualenv_install(env.name, packages = 'spSeudoMap', ignore_installed=T,
                                      pip_options = "git+https://github.com/bsungwoo/spSeudoMap.git")
     }
       reticulate::use_virtualenv(env.name, required = T)
@@ -137,7 +137,7 @@ pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
       }
 
       # Create conda env and install dependencies
-      reticulate::conda_install(env.name, packages='', ignore_installed=T,
+      reticulate::conda_install(env.name, packages='spSeudoMap', ignore_installed=T,
                                 pip = TRUE, pip_options = "git+https://github.com/bsungwoo/spSeudoMap.git")
     }
     # Apply conda environment

@@ -1,6 +1,6 @@
 # spSeudoMap  
 spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data  
-![My Image](/home/nmadmin/DATA1/Spatial/CellDART/spSeudoMap/Fig.1.jpg)  
+![My Image](/home/nmadmin/DATA1/Spatial/CellDART/spSeudoMap/Fig.jpg)  
 
 ## Optimal parameter choices  
   Number of marker genes per cluster: 40 (>20)  
@@ -17,6 +17,9 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
 ## Code Example  
   Python example: spSeudoMap_example.ipynb  
   R example: browseVignettes('spSeudoMap')  
+
+## Data Example  
+  spatial data: 'V1_Adult_Mouse_Brain_Coronal_Section_1' from 10X Genomics Repository  
 
 ## Python function for spSeudoMap (pred_cellf_spSeudoMap.py)  
 ### Install conda environment and add kernel (jupyter)  

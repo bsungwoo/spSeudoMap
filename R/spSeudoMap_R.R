@@ -20,7 +20,7 @@
 #'   \item If "current", python interpreter associated with current virtual env (ex: r-reticulate) will be used. (version should be 3.7)
 #' }
 #'
-#' @param env.name name of the virtual or conda environment to use for CellDART analysis (default: 'spSeudoMap')
+#' @param env.name name of the virtual or conda environment to use for the analysis (default: 'spSeudoMap')
 #'
 #' @param gpu check whether to use gpu (True) or not (False) (default = True)
 #' @param metadata_celltype column name for single-cell annotation data in metadata (default: 'celltype')

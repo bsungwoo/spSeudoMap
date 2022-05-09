@@ -71,9 +71,12 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
 
 ## R wrap function for spSeudoMap (spSeudoMap::pred_cellf_spSeudoMap)
     devtools::install_github("bsungwoo/spSeudoMap", force = T)  
+    library(spSeudoMap)  
+    help(pred_cellf_spSeudoMap) # Explanation for the parameters and short examples
+
   ### Installation of virtual or conda environment
   Linux distributions: The environment will be automatically installed by running the function   
-  Windows: Install conda environment first and then run the function with env.select = 'conda'   
+  Windows: Install conda environment first and then run the function with env.select = 'conda' and python.install=F  
 
   ### Additional parameters  
   **(1) outdir:** the directory to save output files (models and results) (default = '.')  

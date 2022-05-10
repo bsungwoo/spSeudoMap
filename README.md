@@ -16,7 +16,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
 
 ## Code Example  
   Python example: spSeudoMap_example.ipynb  
-  R example: Refer to /vignettes/spSeudoMap_simulation.Rmd and  /vignettes/spSeudoMap_sorted.Rmd  
+  R example: Refer to /vignettes/introduction.Rmd  
 
 ## Data Example  
   spatial data: 'V1_Adult_Mouse_Brain_Coronal_Section_1' from 10X Genomics Repository  
@@ -32,7 +32,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
 ``` Plain Text
 from spSeudoMap.pred_cellf_spSeudoMap import pred_cellf_spSeudoMap  
 adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,   
-                                 gpu=True, celltype='cluster', num_markers=20,  
+                                 gpu=True, celltype='cluster', num_markers=40,  
                                  mixture_mode='pseudotype', seed_num=0,  
                                  mk_ratio_fix=False, mk_ratio=2, pseudo_num_genes=40,  
                                  pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,  
@@ -46,9 +46,9 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   -> non-normalized raw count matrix should be contained in the AnnData .raw file  
   -> if False, then utilize the count matrices saved in adata_sp and adata_sc directly  
   **(4) gpu:** check whether to use gpu (True) or not (False) (default = True)  
-  **(5) celltype:** column name for single-cell annotation data in .obs (default: 'cluster')  
-  **(6) num_markers:** number of selected marker genes in each celltype (default = 20)   
-  **(7) mixture_mode:** mode of the pseudospot generation ('default': same as CellDARt, 'pseudotype': assuming exclusive cell type in spatial data)  
+  **(5) celltype:** column name for single-cell annotation data in .obs (default: 'celltype')  
+  **(6) num_markers:** number of selected marker genes in each celltype (default = 40)   
+  **(7) mixture_mode:** mode of the pseudospot generation ('default': same as CellDART, 'pseudotype': assuming exclusive cell type in spatial data)  
   **(8) seed_num:** seed to be used in random sampling (default = 0)  
   **(9) mk_ratio_fix:** whether to fix the mk_ratio when selecting the pseudotype markers (default = True)  
   **(10) mk_ratio:** ratio of number of single-cell markers to virtual pseudotype markers (default = 2)  
@@ -57,7 +57,7 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   **(12) pseudo_frac_std:** standard deviation of the distribution of presumed pseudotype fraction across all spatial spots (default = 0.1)  
   **(13) num_top_genes:** number of top genes having highest log fold change between spatial and single-cell normalized pseudobulk counts (spatial/single-cell) (default = 20)  
   **(14) nmix:** sampling number of cells in pseudospot (default = 10)  
-  **(15) npseudo:** a total number of pseudospots (default = 20,000)  
+  **(15) npseudo:** a total number of pseudospots (default = 20,000); approximately 5~10 times the number of pseudospots  
 
 ### Training parameters  
   **(1) alpha:** loss weights of the domain classifier to the source classifier (default = 0.6)  
@@ -72,26 +72,64 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
 ## R wrap function for spSeudoMap (spSeudoMap::pred_cellf_spSeudoMap)
     devtools::install_github("bsungwoo/spSeudoMap", force = T)  
     library(spSeudoMap)  
-    help(pred_cellf_spSeudoMap) # Explanation for the parameters and short examples
+    help(pred_cellf_spSeudoMap) # Explanation for the parameters and short examples  
+    browseVignettes("spSeudoMap")  # Browse for the vignettes (/vignettes/introduction.Rmd)  
 
   ### Installation of virtual or conda environment
   Linux distributions: The environment will be automatically installed by running the function   
   Windows: Install conda environment first and then run the function with env.select = 'conda' and python.install=F  
 
-  ### Additional parameters  
+  ## Function and additional parameters
+  ```Plain Text
+  Using conda environment (environment will be automatically installed in Linux distributions)
+  If using Windows, then install conda environment first and then run the function below with python.install = F
+  pseudo_frac_m <- 0.5 (average presumed pseudotype fraction in the tissue)
+  npseudo <- dim(sp_data)[2]*5
+  sp_data_cellf <- pred_cellf_spSeudoMap(sp_data, sc_data,
+                                         outdir=output_folder_name,
+                                         sp_subset=F, spot.cluster.name='seurat_clusters',
+                                         spot.cluster.of.interest=NULL,
+                                         env.select='conda', python.install=T,
+                                         python_path=NULL, env.name='spSeudoMap',
+                                         gpu=TRUE, metadata_celltype='annotation_1',
+                                         num_markers=40, mixture_mode='pseudotype',
+                                         seed_num=0,
+                                         mk_ratio_fix=T, mk_ratio=4,
+                                         pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
+                                         nmix=8, npseudo=nspeudo, alpha=0.6, alpha_lr=5,
+                                         emb_dim=64, batch_size=512, n_iterations=3000, init_train_epoch=10)
+ ```
+ ``` Plain Text
+  Using virtual environment (environment will be automatically installed in Linux distributions)
+  Not recommended for Windows
+  pseudo_frac_m <- 0.5 (average presumed pseudotype fraction in the tissue)
+  npseudo <- dim(sp_data)[2]*5
+  sp_data_cellf <- pred_cellf_spSeudoMap(sp_data, sc_data,
+                                         outdir=output_folder_name,
+                                         sp_subset=F, spot.cluster.name='seurat_clusters',
+                                         spot.cluster.of.interest=NULL,
+                                         env.select='virtual', python.install=T,
+                                         python_path=NULL, env.name='spSeudoMap',
+                                         gpu=TRUE, metadata_celltype='annotation_1',
+                                         num_markers=40, mixture_mode='pseudotype',
+                                         seed_num=0,
+                                         mk_ratio_fix=T, mk_ratio=4,
+                                         pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
+                                         nmix=8, npseudo=nspeudo, alpha=0.6, alpha_lr=5,
+                                         emb_dim=64, batch_size=512, n_iterations=3000, init_train_epoch=10)
+  ```  
   **(1) outdir:** the directory to save output files (models and results) (default = '.')  
-  **(2) source.code.dir:** directory of python source code (default = '.')  
-  **(3) sp_subset:** whether to subset spatial data and calculate for specific spot cluster (default = FALSE)  
-  **(4) spot.cluster.name:** group name of the cluster used for subsetting spatial data (default = 'seurat_clusters')  
-  **(5) spot.cluster.of.interest:** name of each spot clusters to be used (default = NULL)  
-  **(6) env.select:** select between using reticulate virtual environment or conda environment (default = 'conda')  
+  **(2) sp_subset:** whether to subset spatial data and calculate for specific spot cluster (default = FALSE)  
+  **(3) spot.cluster.name:** group name of the cluster used for subsetting spatial data (default = 'seurat_clusters')  
+  **(4) spot.cluster.of.interest:** name of each spot clusters to be used (default = NULL)  
+  **(5) env.select:** select between using reticulate virtual environment or conda environment (default = 'conda')  
   -> either of the selection will search the already installed environment  
   -> if environment is not found, then it will automatically install the new environment  
-  **(7) python.install:** whether to automatically install python version 3.7.12 (default = F)  
+  **(6) python.install:** whether to automatically install python version 3.7.12 (default = F)  
   -> For Windows, set python.install = F  
-  **(8) python_path:** path for the python 3.7.12 (default = NULL)  
-  **(9) env.name:** name of the virtual or conda environment to use for CellDART analysis (default = 'spSeudoMap')  
-  **(10) metadata_celltype:** column name for single-cell annotation data in metadata (default = 'celltype')  
+  **(7) python_path:** path for the python 3.7.12 (default = NULL)  
+  **(8) env.name:** name of the virtual or conda environment to use for the analysis (default = 'spSeudoMap')  
+  **(9) metadata_celltype:** column name for single-cell annotation data in metadata (default = 'celltype')  
 
 ### Potential errors when installing new conda environment by R wrap function (env.select='conda')
   **GLIBCXX_3.4.26 should be already installed**  

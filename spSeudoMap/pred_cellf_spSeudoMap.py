@@ -11,8 +11,8 @@
 # -> if False, then utilize the count matrices saved in adata_sp and adata_sc directly
 
 # gpu: check whether to use gpu (True) or not (False) (default = True)
-# celltype: column name for single-cell annotation data in metadata(.obs) (default: 'cluster')
-# num_markers: number of selected marker genes in each cell-type (default = 20)
+# celltype: column name for single-cell annotation data in metadata(.obs) (default: 'celltype')
+# num_markers: number of selected marker genes in each cell-type (default = 40)
 
 # mixture_mode: mode of the pseudospot generation 
 # -> 'default': when cell types are similar between single-cell/spatial data (Identical to CellDART)
@@ -52,7 +52,7 @@
 # spatial_raw: spatial data (AnnData object) with predicted cell fraction in metadata (.obs)
 # df: dataframe for predicted cell fraction across all spatial spots
 def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False, 
-                            gpu=True, celltype='cluster', num_markers=20,
+                            gpu=True, celltype='celltype', num_markers=40,
                             mixture_mode='pseudotype', seed_num=0, 
                             mk_ratio_fix=True, mk_ratio=2, pseudo_num_genes=40, 
                             pseudo_frac_m=0.5, pseudo_frac_std=0.1, num_top_genes=20,
@@ -239,7 +239,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
             mat_sp_s.shape, mat_sc_s.shape, sc_mix_s.shape, lab_mix.shape)
         
 
-    # Train the CellDART model
+    # Train the domain adaptation model
     embs, clssmodel = da_cellfraction.train(sc_mix_s, lab_mix, mat_sp_s, 
                                             emb_dim = emb_dim, batch_size = batch_size,
                                             n_iterations = n_iterations,

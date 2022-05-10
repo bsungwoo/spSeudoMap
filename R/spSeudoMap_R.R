@@ -24,7 +24,7 @@
 #'
 #' @param gpu check whether to use gpu (True) or not (False) (default = True)
 #' @param metadata_celltype column name for single-cell annotation data in metadata (default: 'celltype')
-#' @param num_markers number of selected marker genes in each cell-type (default = 20)
+#' @param num_markers number of selected marker genes in each cell-type (default = 40)
 #'
 #' @param mixture_mode mode of the pseudospot generation (default = 'pseudotype')
 #' \itemize{
@@ -34,7 +34,7 @@
 #'
 #' @param seed_num seed to be used in random sampling (default = 0)
 #'
-#' @param mk_ratio_fix: whether to fix the mk_ratio when selecting the
+#' @param mk_ratio_fix: whether to fix the mk_ratio when selecting the pseudotype markers (default = True)
 #' @param mk_ratio: ratio of number of single-cell markers to virtual pseudotype markers (default = 2)
 #' @param pseudo_num_genes: number of the virtual markers genes for pseudotype (default = 40)
 #' \itemize{
@@ -49,7 +49,7 @@
 #' @param num_top_genes number of top genes having highest log fold change between spatial and single-cell normalized pseudobulk counts (spatial/single-cell): the top genes are used for generating module score to predict pseudotype fraction in spatial spots
 #'
 #' @param nmix the number of cells sampled from single-cell data when making a pseudospot (default = 10)
-#' @param npseudo a total number of pseudospots (default = 20000)
+#' @param npseudo a total number of pseudospots (default = 20000); approximately 5~10 times the number of pseudospots
 #'
 #' @param alpha loss weights of domain classifier to the source classifier (default = 0.6)
 #' @param alpha_lr learning rate for the domain classifier (alpha_lr*0.001, default = 5)
@@ -63,48 +63,52 @@
 #' @examples
 #' Using conda environment (environment will be automatically installed in Linux distributions)
 #' If using Windows, then install conda environment first and then run the function below with python.install = F
-#' sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data,
+#' pseudo_frac_m <- 0.5 (average presumed pseudotype fraction in the tissue)
+#' npseudo <- dim(sp_data)[2]*5
+#' sp_data_cellf <- pred_cellf_spSeudoMap(sp_data, sc_data,
 #'                                        outdir=output_folder_name,
-#'                                        sp_subset=F,spot.cluster.name='seurat_clusters',
+#'                                        sp_subset=F, spot.cluster.name='seurat_clusters',
 #'                                        spot.cluster.of.interest=NULL,
-#'                                        env.select='conda',python.install=T,
-#'                                        python_path=NULL,env.name='spSeudoMap',
-#'                                        gpu=TRUE,metadata_celltype='annotation_1',
-#'                                        num_markers=40,mixture_mode='pseudotype',
+#'                                        env.select='conda', python.install=T,
+#'                                        python_path=NULL, env.name='spSeudoMap',
+#'                                        gpu=TRUE, metadata_celltype='annotation_1',
+#'                                        num_markers=40, mixture_mode='pseudotype',
 #'                                        seed_num=0,
 #'                                        mk_ratio_fix=T, mk_ratio=4,
 #'                                        pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
-#'                                        nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
-#'                                        emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
+#'                                        nmix=8, npseudo=nspeudo, alpha=0.6, alpha_lr=5,
+#'                                        emb_dim=64, batch_size=512, n_iterations=3000, init_train_epoch=10)
 #' 
 #' Using virtual environment (environment will be automatically installed in Linux distributions)
 #' Not recommended for Windows
-#' sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data,
+#' pseudo_frac_m <- 0.5 (average presumed pseudotype fraction in the tissue)
+#' npseudo <- dim(sp_data)[2]*5
+#' sp_data_cellf <- pred_cellf_spSeudoMap(sp_data, sc_data,
 #'                                        outdir=output_folder_name,
-#'                                        sp_subset=F,spot.cluster.name='seurat_clusters',
+#'                                        sp_subset=F, spot.cluster.name='seurat_clusters',
 #'                                        spot.cluster.of.interest=NULL,
-#'                                        env.select='virtual',python.install=T,
-#'                                        python_path=NULL,env.name='spSeudoMap',
-#'                                        gpu=TRUE,metadata_celltype='annotation_1',
-#'                                        num_markers=40,mixture_mode='pseudotype',
+#'                                        env.select='virtual', python.install=T,
+#'                                        python_path=NULL, env.name='spSeudoMap',
+#'                                        gpu=TRUE, metadata_celltype='annotation_1',
+#'                                        num_markers=40, mixture_mode='pseudotype',
 #'                                        seed_num=0,
 #'                                        mk_ratio_fix=T, mk_ratio=4,
 #'                                        pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
-#'                                        nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
-#'                                        emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
+#'                                        nmix=8, npseudo=nspeudo, alpha=0.6, alpha_lr=5,
+#'                                        emb_dim=64, batch_size=512, n_iterations=3000, init_train_epoch=10)
 #' @export
 pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
                                   sp_subset=FALSE,spot.cluster.name='seurat_clusters',
                                   spot.cluster.of.interest=NULL,
-                                  env.select='conda',python.install=F,
-                                  python_path=NULL,env.name='spSeudoMap',
-                                  gpu=TRUE,metadata_celltype='celltype',
-                                  num_markers=10,mixture_mode='pseudotype',
+                                  env.select='conda', python.install=F,
+                                  python_path=NULL, env.name='spSeudoMap',
+                                  gpu=TRUE, metadata_celltype='celltype',
+                                  num_markers=40, mixture_mode='pseudotype',
                                   seed_num=0,
                                   mk_ratio_fix=T, mk_ratio=2,
                                   pseudo_num_genes=40,
-                                  pseudo_frac_m=0.5,pseudo_frac_std=0.05, num_top_genes=20,
-                                  nmix=10,npseudo=60000,alpha=1,alpha_lr=5,
+                                  pseudo_frac_m=0.5,pseudo_frac_std=0.1, num_top_genes=20,
+                                  nmix=10,npseudo=20000,alpha=1,alpha_lr=5,
                                   emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10){
 
   # Suppress warnings

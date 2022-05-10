@@ -1,12 +1,11 @@
 ---
-title: "Example for spSeudoMap in R (Simulation data)"
+title: "Introduction to spSeudoMap"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{spSeudoMap_simulation}
+  %\VignetteIndexEntry{introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -28,21 +27,7 @@ knitr::opts_knit$set(
 # ## Install spSeudoMap package
 # if (!requireNamespace("spSeudoMap", quietly = TRUE))
 #   devtools::install_github("bsungwoo/spSeudoMap")
-# 
-# ## Install sceasy
-# # https://github.com/cellgeni/sceasy
-# # 1. Install BiocManager
-# if (!requireNamespace("BiocManager", quietly = TRUE))
-#   install.packages("BiocManager")
-# 
-# # 2. Install LoomExperiment
-# if (!requireNamespace("LoomExperiment", quietly = TRUE))
-#   BiocManager::install(c("LoomExperiment", "SingleCellExperiment"))
-# 
-# # 3. Install sceasy
-# if (!requireNamespace("sceasy", quietly = TRUE))
-#   devtools::install_github("cellgeni/sceasy")
-
+#
 ```
 
 ## Load required packages
@@ -73,13 +58,13 @@ knitr::opts_knit$set(
 
 
 ## Install conda environment
-<!-- conda create -n spSeudoMap python=3.7.12 -c conda-forge -->
-<!-- conda activate spSeudoMap -->
-<!-- pip install git+https://github.com/bsungwoo/spSeudoMap.git -->
-<!-- python -m ipykernel install --user --name spSeudoMap --display-name spSeudoMap -->
+conda create -n spSeudoMap python=3.7.12 -c conda-forge  
+conda activate spSeudoMap  
+pip install git+https://github.com/bsungwoo/spSeudoMap.git  
+python -m ipykernel install --user --name spSeudoMap --display-name spSeudoMap  
 
 
-## Load single-cell and spatial datasets
+## 1. spSeudoMap analysis for simulation dataset (excitatory neuron subpopulation)
 ### Download single-nucleus dataset
 #### Kleshchevnikov, V., Shmatko, A., Dann, E. et al. Cell2location maps fine-grained cell types in spatial transcriptomics. Nat Biotechnol (2022).
 #### https://cell2location.readthedocs.io/en/latest/notebooks/cell2location_short_demo.html¶
@@ -231,3 +216,96 @@ knitr::opts_knit$set(
 # patchwork::wrap_plots(p, ncol = 4)
 
 ```
+
+
+
+
+## 2. spSeudoMap analysis for real sorted dataset
+### Load single-cell and spatial datasets
+### Load single-nucleus data and generate simulation dataset
+```{r}
+# # Seurat object file for single-cell data stored in sc_data.rds
+# sc_data <- readRDS('sc_data.rds')
+```
+
+
+### Load spatial dataset (RDS file with Seurat object): 10X genomics data repository
+#### V1_Adult_Mouse_Brain_Coronal_Section_1
+```{r}
+# # Seurat object file for spatial data stored in sc_data.rds
+# sp_data <- readRDS('sp_data.rds')
+```
+
+### Check the size of spatial data
+```{r}
+# dim(sp_data)
+```
+
+### Set the number of pseudospots: 5 times the number of spatial spots
+```{r}
+# npseudo <- 5*dim(sp_data)[2]
+# npseudo
+```
+
+### Set the pseudotype fraction from the literature evidence or cell sorting experiment (fraction of non-sorted cell population)
+```{r}
+# # Presumed average pseudotype (non-sorted cell population) fraction: from the literature or cell sorting experiment
+# pseudo_frac_m <- 0.5
+```
+
+## Perform spSeuoMap analysis
+#### Explanation for the function
+```{r}
+# help(pred_cellf_spSeudoMap)
+```
+
+### Run spSeudoMap
+```{r}
+# # Using already installed conda environment
+# # Conda environment will be automatically installed if 'spSeudoMap' is not already installed
+# sp_data_cellf <- pred_cellf_spSeudoMap(sp_data,sc_data,
+#                                        outdir=output_folder_name,
+#                                        sp_subset=F,spot.cluster.name='seurat_clusters',
+#                                        spot.cluster.of.interest=NULL,
+#                                        env.select='conda',python.install=T,
+#                                        python_path=NULL,env.name='spSeudoMap',
+#                                        gpu=TRUE,metadata_celltype='annotation_1',
+#                                        num_markers=40,mixture_mode='pseudotype',
+#                                        seed_num=0,
+#                                        mk_ratio_fix=T, mk_ratio=4,
+#                                        pseudo_frac_m=pseudo_frac_m, pseudo_frac_std=0.1,
+#                                        nmix=8,npseudo=npseudo,alpha=0.6,alpha_lr=5,
+#                                        emb_dim=64,batch_size=512,n_iterations=3000,init_train_epoch=10)
+
+```
+
+
+### Save seurat object with cell fraction
+```{r}
+# saveRDS(sp_data_cellf, file.path(filepath, output_folder_name, 'sp_data_cellf.rds'))
+```
+
+
+
+### Visualization of spatial cell fraction
+#### Remove '_cellf' from the column names cell fraction metadata
+```{r}
+# cellf.data <- sp_data_cellf@meta.data
+# cellf.data.colname <- sapply(colnames(cellf.data), function(x){
+#   if (grepl('_cellf',x)){return(strsplit(x, split='_cellf')[[1]][1])}
+#   else {return(x)}
+# })
+# sp_data_cellf.mod <- sp_data_cellf
+# colnames(sp_data_cellf.mod@meta.data) <- cellf.data.colname
+```
+
+
+#### Visualize the cell types
+```{r}
+# p <- Seurat::SpatialFeaturePlot(sp_data_cellf.mod, features = cellf.data.colname[1:8], 
+#                                 ncol = 4, alpha=0.6, combine = FALSE)
+# patchwork::wrap_plots(p, ncol = 4)
+
+```
+
+

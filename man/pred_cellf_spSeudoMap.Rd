@@ -37,9 +37,9 @@ pred_cellf_spSeudoMap(
 )
 }
 \arguments{
-\item{sp_data}{spatial data (Seurat object) to be used in predicting cell fraction (default: None): non-normalized raw data should be in 'counts' slot}
+\item{sp_data}{spatial data (Seurat object) to be used in predicting cell fraction: non-normalized raw data should be in 'counts' slot}
 
-\item{sc_data}{single-cell data (Seurat object) to be used in making pseudospots (default: None): non-normalized raw data should be in 'counts' slot}
+\item{sc_data}{single-cell data (Seurat object) to be used in making pseudospots: non-normalized raw data should be in 'counts' slot}
 
 \item{outdir}{the directory to save output files (models and results) (default = '.')}
 

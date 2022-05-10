@@ -1,8 +1,8 @@
 #' R wrap function to implement spSeudoMap
 #' @description Cell type mapping of spatial transcriptomics using unmatched single-cell RNA-seq data. Of note, if mixture_mode = 'default', then algorithm is identical to 'CellDART'
 #'
-#' @param sp_data spatial data (Seurat object) to be used in predicting cell fraction (default: None): non-normalized raw data should be in 'counts' slot
-#' @param sc_data single-cell data (Seurat object) to be used in making pseudospots (default: None): non-normalized raw data should be in 'counts' slot
+#' @param sp_data spatial data (Seurat object) to be used in predicting cell fraction: non-normalized raw data should be in 'counts' slot
+#' @param sc_data single-cell data (Seurat object) to be used in making pseudospots: non-normalized raw data should be in 'counts' slot
 #'
 #' @param outdir the directory to save output files (models and results) (default = '.')
 #'

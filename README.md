@@ -70,7 +70,7 @@ adata_sp = pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=Fa
   **(8) return_format:** whether to return spatial AnnData file with predicted cell fraction in .obs (default: False)  
 
 ## R wrap function for spSeudoMap (spSeudoMap::pred_cellf_spSeudoMap)
-    devtools::install_github("bsungwoo/spSeudoMap", force = T)  
+    devtools::install_github("bsungwoo/spSeudoMap", build_vignettes = T, force = T)  
     library(spSeudoMap)  
     help(pred_cellf_spSeudoMap) # Explanation for the parameters and short examples  
     browseVignettes("spSeudoMap")  # Browse for the vignettes (/vignettes/introduction.Rmd)  

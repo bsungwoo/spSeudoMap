@@ -138,7 +138,7 @@ pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
 
       # Create virtual env and install dependencies
       # reticulate::virtualenv_install(env.name, packages = python_depend, ignore_installed=T)
-      reticulate::virtualenv_install(env.name, packages = 'spSeudoMap', ignore_installed=T,
+      reticulate::virtualenv_install(env.name, packages = 'pip', ignore_installed=T,
                                      pip_options = "git+https://github.com/bsungwoo/spSeudoMap.git")
     }
       reticulate::use_virtualenv(env.name, required = T)
@@ -155,7 +155,7 @@ pred_cellf_spSeudoMap <- function(sp_data,sc_data,outdir='.',
       }
 
       # Create conda env and install dependencies
-      reticulate::conda_install(env.name, packages='spSeudoMap', ignore_installed=T,
+      reticulate::conda_install(env.name, ignore_installed=T,
                                 pip = TRUE, pip_options = "git+https://github.com/bsungwoo/spSeudoMap.git")
     }
     # Apply conda environment

@@ -23,7 +23,7 @@ spSeudoMap: cell type mapping of spatial transcriptomics using unmatched single-
 
 ## Python function for spSeudoMap (pred_cellf_spSeudoMap)  
 ### Install conda environment and add kernel (jupyter)  
-    conda create -n spSeudoMap python=3.7.12 -c conda-forge  
+    conda create -n spSeudoMap python=3.8
     conda activate spSeudoMap  
     pip install git+https://github.com/bsungwoo/spSeudoMap.git  
     python -m ipykernel install --user --name spSeudoMap --display-name spSeudoMap  

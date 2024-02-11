@@ -64,7 +64,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     if gpu:
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         os.environ["CUDA_VISIBLE_DEVICES"]= "0" # Use only gpu-0
-        print('GPU is available and will be used')
+        print('Searching for GPU: use it if available')
     else:
         os.environ['CUDA_VISIBLE_DEVICES'] = "-1" # Use CPU
         print('CPU will be used')
@@ -91,7 +91,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
         os.makedirs(outdir)
     
     ## Load and preprocess spatial dataset
-    if count_from_raw: spatial_all = adata_sp.raw.to_adata()
+    if count_from_raw: spatial_all = adata_sp.raw.to_adata().copy()
     else: spatial_all = adata_sp.copy()
     # Make variable names unique for spatial data
     spatial_all.var_names_make_unique()
@@ -105,7 +105,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     sc.pp.normalize_total(spatial_all, target_sum=1e4, inplace=True)
 
     ## Load and preprocess single-cell dataset
-    if count_from_raw: single_all = adata_sc.raw.to_adata()
+    if count_from_raw: single_all = adata_sc.raw.to_adata().copy()
     else: single_all = adata_sc.copy()
     # Make variable names unique for spatial data
     single_all.var_names_make_unique()
@@ -124,7 +124,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     sc.pp.normalize_total(single_all, target_sum=1e4, inplace=True)
     
     # save the normalized data in raw
-    single_all.raw = single_all
+    single_all.raw = single_all.copy()
     
     # log-transform the count matrix
     sc.pp.log1p(single_all)
@@ -196,7 +196,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     lab_sc_num = np.asarray(lab_sc_num, dtype='int')
     
     # Call original total normalized count (not log-normalized count)
-    adata_final = single_all.raw.to_adata()
+    adata_final = single_all.raw.to_adata().copy()
 
     # Generate pseudospot: random mixture of cells
     if mixture_mode == 'default':
@@ -214,7 +214,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
                                                                     df_foldchange=df_pseudo)
     
     # Raw file for merged spatial data
-    spatial_raw = spatial_all
+    spatial_raw = spatial_all.copy()
 
     # Generate count matrix for spatial data (mat_sp)
     spatial_all = spatial_all[:,inter_genes_comb].copy()

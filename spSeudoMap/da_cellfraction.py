@@ -41,12 +41,12 @@ def build_models(inp_dim, emb_dim, n_cls_source, alpha=2, alpha_lr=10):
               loss_weights={'mo': 1, 'do': alpha}, metrics=['accuracy'], )
 
     source_classification_model = Model(inputs=inputs, outputs=[source_classifier])
-    source_classification_model.compile(optimizer=optimizers.adam(lr=0.001),
+    source_classification_model.compile(optimizer=optimizers.Adam(lr=0.001),
               loss={'mo': 'kld'}, metrics=['mae'], )
 
 
     domain_classification_model = Model(inputs=inputs, outputs=[domain_classifier])
-    domain_classification_model.compile(optimizer=optimizers.adam(lr=alpha_lr*0.001),
+    domain_classification_model.compile(optimizer=optimizers.Adam(lr=alpha_lr*0.001),
                   loss={'do': 'categorical_crossentropy'}, metrics=['accuracy'])
     
     

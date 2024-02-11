@@ -1,15 +1,19 @@
 # Suppress tensorflow warnings
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-from tensorflow.compat.v1 import logging
-logging.set_verbosity(logging.ERROR)
 
 import numpy as np
-from keras.layers import Input, Dense, Activation, BatchNormalization, Dropout
-from keras.models import Model
-from keras.utils import to_categorical
+from tensorflow.compat.v1 import logging, disable_eager_execution
+logging.set_verbosity(logging.ERROR)
+# Remove compatibility issues
+disable_eager_execution()
+experimental_run_tf_function=False
+
+from tensorflow.keras.layers import Input, Dense, Activation, BatchNormalization, Dropout
+from tensorflow.keras.models import Model
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras import optimizers
 from sklearn.metrics import accuracy_score
-from keras import optimizers
 
 
 ### Build deep learning models for adversarial domain adaptation
@@ -122,7 +126,6 @@ def train(Xs, ys, Xt, yt=None,
         X1, y1 = next(T_batches) 
         # X1: selected batch from Xt (gene exp), y1: selected batch from all-zero array
 
-
         X_adv = np.concatenate([X0, X1]) # concat pseudospots + spots gene exp data
         y_class = np.concatenate([y0, np.zeros_like(y0)]) # concat pseudospots + spots cell frac data
 
@@ -147,7 +150,6 @@ def train(Xs, ys, Xt, yt=None,
 
             class_weights = []
             
-        
             for layer in model.layers:
                 if (not layer.name.startswith("do")):
                     class_weights.append(layer.get_weights())
@@ -172,7 +174,7 @@ def train(Xs, ys, Xt, yt=None,
             if ((i + 1) % 100 == 0):
                 # print(i, stats)
                 sourceloss, sourceacc = source_classification_model.evaluate(Xs, ys,verbose=0)
-                domainloss,domainacc  = domain_classification_model.evaluate(np.concatenate([Xs, Xt]),
+                domainloss, domainacc = domain_classification_model.evaluate(np.concatenate([Xs, Xt]),
                                                                      to_categorical(np.array(([1] * Xs.shape[0] + [0] * Xt.shape[0]))),
                                                                      verbose=0)
                 print("Iteration %d, source loss =  %.3f, discriminator acc = %.3f"%(i, sourceloss ,domainacc))

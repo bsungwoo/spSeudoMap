@@ -217,7 +217,7 @@ def pred_cellf_spSeudoMap(adata_sp=None, adata_sc=None, count_from_raw=False,
     spatial_raw = spatial_all.copy()
 
     # Generate count matrix for spatial data (mat_sp)
-    spatial_all = spatial_all[:,inter_genes_comb].copy()
+    spatial_all = spatial_all[:,inter_genes_comb]
     if isinstance(spatial_all.X, np.ndarray):
         mat_sp = spatial_all.X
     else: 

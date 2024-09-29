@@ -194,10 +194,10 @@ def random_mix_pseudobulk(adata_sc, adata_sp, ys, genes_of_interest, marker_gene
     pseudo_markers = pseudo_markers[:num_top_genes].index.tolist()
     
     # Calculate module score for single-cell mixture marker marker genes
-    sc.pp.log1p(adata_sp)
-    sc.tl.score_genes(adata_sp, gene_list=pseudo_markers, ctrl_size=n_ctrl, n_bins=n_bin, 
-                        score_name='pseudotype', random_state=seed, use_raw=False)
-    pseudo_module = adata_sp.obs['pseudotype']
+    adata_sp_ = sc.pp.log1p(adata_sp, copy=True)
+    sc.tl.score_genes(adata_sp_, gene_list=pseudo_markers, ctrl_size=n_ctrl, n_bins=n_bin, 
+                      score_name='pseudotype', random_state=seed, use_raw=False)
+    pseudo_module = adata_sp_.obs['pseudotype']
 
     print("Genes used for calculation of pseudotype fraction")
     print(pseudo_markers)
